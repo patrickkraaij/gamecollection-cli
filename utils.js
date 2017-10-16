@@ -24,5 +24,14 @@ module.exports = {
 	},
 	pleaseEnterName: () => {
 		return console.error(chalk.red('Could not complete your request, please enter a name for a game'));
+	},
+	sortGameTitle(a, b) {
+		if (a.title < b.title) {
+			return -1;
+		}
+		if (a.title > b.title) {
+			return 1;
+		}
+		return 0;
 	}
 };
