@@ -1,29 +1,29 @@
 {
-	"name": "gamecollection-cli",
-	"version": "1.0.0",
-	"description": "CLI tool to do create, read and delete operations at your game collection",
-	"main": "gamecli",
-	"bin": {
-		"gamecli": "./index.js"
-	},
-	"author": "Patrick Kraaij",
-	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/patrickkraaij/gamecollection-cli.git"
-	},
-	"scripts": {
-		"lint": "./node_modules/.bin/eslint *.js"
-	},
-	"dependencies": {
-		"chalk": "^2.0.1",
-		"cli-table": "^0.3.1",
-		"commander": "^2.11.0",
-		"inquirer": "^3.1.1",
-		"mongodb": "^2.2.29",
-		"thegamesdb": "^0.1.2"
-	},
-	"devDependencies": {
-		"eslint": "^4.1.1"
-	}
+  "name": "gamecollection-cli",
+  "version": "1.1.0",
+  "description": "CLI tool to do create, read and delete operations at your game collection",
+  "main": "gamecli",
+  "bin": {
+    "gamecli": "./index.js"
+  },
+  "author": "Patrick Kraaij",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/patrickkraaij/gamecollection-cli.git"
+  },
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint *.js"
+  },
+  "dependencies": {
+    "chalk": "^2.0.1",
+    "cli-table": "^0.3.1",
+    "commander": "^2.11.0",
+    "inquirer": "^3.1.1",
+    "mongodb": "^2.2.29",
+    "thegamesdb": "^0.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.1.1"
+  }
 }
