@@ -13,12 +13,18 @@ program
 	.command('list')
 	.description('Retrieve all the games from the database')
 	.alias('l')
-	.action(() => {
-		app.getCollection();
+	.option('-p, --platform')
+	.action((options) => {
+		if (options.platform) {
+			app.getCollectionPerPlatform();
+		}
+		else {
+			app.getCollection();
+		}
 	});
 
 program
-	.command('add [game]')
+	.command('add <game>')
 	.description('Search for a game and add it to the database')
 	.alias('a')
 	.action((game) => {
@@ -26,7 +32,7 @@ program
 	});
 
 program
-	.command('remove [game]')
+	.command('remove <game>')
 	.description('Remove a game from the database')
 	.alias('rm')
 	.action((game) => {
