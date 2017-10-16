@@ -1,7 +1,7 @@
 {
 	"name": "gamecollection-cli",
 	"version": "1.0.0",
-	"description": "CLI tool to do CRUD operations at my game collection",
+	"description": "CLI tool to do create, read and delete operations at your game collection",
 	"main": "gamecli",
 	"bin": {
 		"gamecli": "./index.js"

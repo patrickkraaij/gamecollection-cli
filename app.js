@@ -13,38 +13,51 @@ module.exports = {
 			utils.connectedToDB(db);
 
 			db.collection('games').find().toArray((err, result) => {
-				if (err) {
-					throw err;
-				}
-
 				if (result.length > 0) {
 					let table = new Table({
-						head: [
-							'Title',
-							'Platform'
-						],
-						colWidths: [
-							60,
-							40
-						]
+						head: ['Title', 'Platform'],
+						colWidths: [60, 40]
 					});
 
-					result.some((currentValue) => {
-						table.push(
-							[
-								currentValue.title,
-								currentValue.platform
-							]
-						);
+					result.sort(utils.sortGameTitle).forEach((currentValue) => {
+						table.push([currentValue.title, currentValue.platform]);
 					});
 
 					console.log(table.toString());
+
+					db.close();
 				}
-
 				utils.calculateGames(result);
-
-				db.close();
 			});
+		});
+	},
+	getCollectionPerPlatform: () => {
+		MongoClient.connect(mongodb.uri(), (err, db) => {
+			utils.connectedToDB(db);
+
+			db.collection('games').distinct('platform', ((err, result) => {
+				if (result.length > 0) {
+					result.sort().forEach((platform) => {
+						db.collection('games').find({
+							platform: platform
+						}).toArray((err, games) => {
+							let gamesTable = new Table({
+								head: ['Title', 'Platform'],
+								colWidths: [60, 40]
+							});
+
+							games.sort(utils.sortGameTitle).forEach((item) => {
+								gamesTable.push([item.title, platform]);
+							});
+
+							gamesTable.push(['Total ' + platform + ' games', games.length]);
+
+							console.log(gamesTable.toString());
+						});
+					});
+					db.close();
+				}
+			}));
 		});
 	},
 	getGame: (game) => {
@@ -55,7 +68,7 @@ module.exports = {
 				if (data.length > 0) {
 					let results = [];
 
-					data.some((currentValue) => {
+					data.forEach((currentValue) => {
 						results.push({
 							name: currentValue.title + ' ' + currentValue.platform,
 							value: currentValue.id
@@ -89,9 +102,6 @@ module.exports = {
 											utils.connectedToDB(db);
 
 											db.collection('games').insertOne(mongodb.schema(data), (err) => {
-												if (err) {
-													throw err;
-												}
 												utils.gameAdded(mongodb.schema(data).title);
 
 												db.close();
@@ -115,22 +125,14 @@ module.exports = {
 			MongoClient.connect(mongodb.uri(), (err, db) => {
 				utils.connectedToDB(db);
 
-				if (err) {
-					throw err;
-				}
-
 				let query = {
 					title: utils.multipleWordsInput(process.argv)
 				};
 
 				db.collection('games').find(query).toArray((err, results) => {
-					if (err) {
-						throw err;
-					}
-
 					let promptResults = [];
 
-					results.some((currentValue) => {
+					results.forEach((currentValue) => {
 						promptResults.push({
 							name: currentValue.title + ' ' + currentValue.platform,
 							value: currentValue._id
