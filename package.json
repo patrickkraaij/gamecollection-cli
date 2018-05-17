@@ -4,7 +4,7 @@
   "description": "CLI tool to do create, read and delete operations at your game collection",
   "main": "gamecli",
   "bin": {
-    "gamecli": "./index.js"
+    "gamecollection": "./index.js"
   },
   "author": "Patrick Kraaij",
   "license": "MIT",
@@ -19,8 +19,8 @@
     "chalk": "^2.0.1",
     "cli-table": "^0.3.1",
     "commander": "^2.11.0",
+    "gamecollection-mongodb": "^0.1.0",
     "inquirer": "^3.1.1",
-    "mongodb": "^2.2.29",
     "thegamesdb": "^0.1.2"
   },
   "devDependencies": {
