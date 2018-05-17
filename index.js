@@ -2,9 +2,9 @@
 
 'use strict';
 
-const program = require('commander'),
-	packagejson = require('./package.json'),
-	app = require('./app');
+const program = require('commander');
+const packagejson = require('./package.json');
+const app = require('./app');
 
 program
 	.version(packagejson.version);
@@ -28,7 +28,7 @@ program
 	.description('Search for a game and add it to the database')
 	.alias('a')
 	.action((game) => {
-		app.getGame(game);
+		app.addGame(game);
 	});
 
 program
@@ -36,7 +36,7 @@ program
 	.description('Remove a game from the database')
 	.alias('rm')
 	.action((game) => {
-		app.deleteGame(game);
+		app.removeGame(game);
 	});
 
 program.parse(process.argv);
