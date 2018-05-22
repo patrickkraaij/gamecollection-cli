@@ -2,6 +2,7 @@
 
 const chalk = require('chalk');
 const inquirer = require('inquirer');
+const labels = require('./labels');
 
 module.exports = {
 	multipleWordsInput: (input) => {
@@ -9,19 +10,16 @@ module.exports = {
 		return input.splice(3).join(' ');
 	},
 	calculateGames: (games) => {
-		return console.log(chalk.cyan(games.length) + ' games in your collection');
+		return console.log(chalk.cyan(games.length) + ` ${labels.log.gamesInCollection}`);
 	},
 	noGamesFound: () => {
-		return console.warn(chalk.dim('No games found'));
+		return console.warn(chalk.dim(labels.warning.noGamesFound));
 	},
 	gameAdded: (game) => {
-		return console.log(chalk.yellow(chalk.bold(game) + ' inserted into your game collection.'));
+		return console.log(chalk.yellow(chalk.bold(game) + ` ${labels.log.insertedIntoCollection}`));
 	},
 	gameRemoved: (game) => {
-		return console.log(chalk.yellow(chalk.bold(game) + ' removed from your game collection.'));
-	},
-	pleaseEnterName: () => {
-		return console.error(chalk.red('Could not complete your request, please enter a name for a game'));
+		return console.log(chalk.yellow(chalk.bold(game) + ` ${labels.log.removedFromCollection}`));
 	},
 	dialog: async (dialogType, dialogMessage, dialogName, dialogChoices, dialogPageSize, dialogNoSelectionMessage) => {
 		return await inquirer.prompt([{
