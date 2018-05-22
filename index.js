@@ -2,41 +2,40 @@
 
 'use strict';
 
-const program = require('commander'),
-	packagejson = require('./package.json'),
-	app = require('./app');
+const program = require('commander');
+const packagejson = require('./package.json');
+const app = require('./app');
+const labels = require('./labels');
+const utils = require('./utils');
 
 program
 	.version(packagejson.version);
 
 program
 	.command('list')
-	.description('Retrieve all the games from the database')
-	.alias('l')
+	.description(labels.program.list)
 	.option('-p, --platform')
 	.action((options) => {
-		if (options.platform) {
-			app.getCollectionPerPlatform();
-		}
-		else {
-			app.getCollection();
-		}
+		options.platform ? app.getCollectionPerPlatform() : app.getCollection();
 	});
 
 program
 	.command('add <game>')
-	.description('Search for a game and add it to the database')
-	.alias('a')
-	.action((game) => {
-		app.getGame(game);
+	.description(labels.program.add)
+	.action(() => {
+		app.addGame(utils.multipleWordsInput(process.argv));
 	});
 
 program
 	.command('remove <game>')
-	.description('Remove a game from the database')
+	.description(labels.program.remove)
 	.alias('rm')
-	.action((game) => {
-		app.deleteGame(game);
+	.action(() => {
+		app.removeGame(utils.multipleWordsInput(process.argv));
 	});
 
 program.parse(process.argv);
+
+if (!program.args.length) {
+	program.help();
+}

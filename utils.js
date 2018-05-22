@@ -1,6 +1,8 @@
 'use strict';
 
 const chalk = require('chalk');
+const inquirer = require('inquirer');
+const labels = require('./labels');
 
 module.exports = {
 	multipleWordsInput: (input) => {
@@ -8,30 +10,30 @@ module.exports = {
 		return input.splice(3).join(' ');
 	},
 	calculateGames: (games) => {
-		return console.log(chalk.cyan(games.length) + ' games in your collection');
-	},
-	connectedToDB: (db) => {
-		return console.info(chalk.green('Connected to the database ' + chalk.bold(db.databaseName)));
+		return console.log(chalk.cyan(games.length) + ` ${labels.log.gamesInCollection}`);
 	},
 	noGamesFound: () => {
-		return console.warn(chalk.dim('No games found'));
+		return console.warn(chalk.dim(labels.warning.noGamesFound));
 	},
 	gameAdded: (game) => {
-		return console.log(chalk.yellow(chalk.bold(game) + ' inserted into games collection.'));
+		return console.log(chalk.yellow(chalk.bold(game) + ` ${labels.log.insertedIntoCollection}`));
 	},
 	gameRemoved: (game) => {
-		return console.log(chalk.yellow(chalk.bold(game) + ' removed from games collection.'));
+		return console.log(chalk.yellow(chalk.bold(game) + ` ${labels.log.removedFromCollection}`));
 	},
-	pleaseEnterName: () => {
-		return console.error(chalk.red('Could not complete your request, please enter a name for a game'));
-	},
-	sortGameTitle(a, b) {
-		if (a.title < b.title) {
-			return -1;
-		}
-		if (a.title > b.title) {
-			return 1;
-		}
-		return 0;
+	dialog: async (dialogType, dialogMessage, dialogName, dialogChoices, dialogPageSize, dialogNoSelectionMessage) => {
+		return await inquirer.prompt([{
+			type: dialogType,
+			message: dialogMessage,
+			name: dialogName,
+			choices: dialogChoices,
+			pageSize: dialogPageSize,
+			validate: (answer) => {
+				if (answer.length < 1) {
+					return dialogNoSelectionMessage;
+				}
+				return true;
+			}
+		}]);
 	}
 };
