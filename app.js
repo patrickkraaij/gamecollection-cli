@@ -3,6 +3,7 @@
 const Table = require('cli-table');
 const thegamesdb = require('thegamesdb');
 const gcdb = require('gamecollection-mongodb');
+const labels = require('./labels');
 const utils = require('./utils');
 
 module.exports = {
@@ -10,7 +11,7 @@ module.exports = {
 		const result = await gcdb.getGames();
 
 		let table = new Table({
-			head: ['Title', 'Platform'],
+			head: labels.collectionTableHeader,
 			colWidths: [60, 40]
 		});
 
@@ -35,76 +36,66 @@ module.exports = {
 				table.push([game.title]);
 			});
 
-			table.push([`Total: ${currentValue.games.length} games`]);
+			table.push([labels.calculateGames(currentValue.games.length)]);
 			console.log(table.toString());
 		});
 	},
 	addGame: async (game) => {
-		if (game !== undefined) {
-			const thegamesdbResult = await thegamesdb.getGamesList({
-				name: utils.multipleWordsInput(process.argv)
+		const thegamesdbResult = await thegamesdb.getGamesList({
+			name: game
+		});
+
+		if (thegamesdbResult.length) {
+			const choices = thegamesdbResult.map(item => {
+				return {
+					name: `${item.title} | ${item.platform}`,
+					value: item.id
+				};
 			});
 
-			if (thegamesdbResult.length > 0) {
-				const choices = thegamesdbResult.map(item => {
-					return {
-						name: `${item.title} | ${item.platform}`,
-						value: item.id
-					};
-				});
+			const addGamesDialog = await utils.dialog('checkbox', labels.dialog.add.title, 'gameIDs', choices, 10, labels.dialog.add.validationMessage);
+			const addGamesConfirmDialog = await utils.dialog('confirm', labels.dialog.add.comfirmTitle, 'isAdding');
 
-				const addGamesDialog = await utils.dialog('checkbox', 'Select games to add:', 'gameIDs', choices, 10, 'You must choose at least one game');
-				const addGamesConfirmDialog = await utils.dialog('confirm', 'Add selected game(s)?:', 'isAdding');
-
-				if (addGamesConfirmDialog.isAdding) {
-					for (const gameID of addGamesDialog.gameIDs) {
-						let gameInformation = await thegamesdb.getGame({ id: gameID });
-						await gcdb.addGame(gameInformation);
-						utils.gameAdded(gameInformation.title);
-					}
+			if (addGamesConfirmDialog.isAdding) {
+				for (const gameID of addGamesDialog.gameIDs) {
+					let gameInformation = await thegamesdb.getGame({ id: gameID });
+					await gcdb.addGame(gameInformation);
+					utils.gameAdded(gameInformation.title);
 				}
-			}
-			else {
-				utils.noGamesFound();
 			}
 		}
 		else {
-			utils.pleaseEnterName();
+			utils.noGamesFound();
 		}
 	},
 	removeGame: async (game) => {
-		if (game !== undefined) {
-			const query = {
-				title: utils.multipleWordsInput(process.argv)
-			};
+		const query = {
+			title: game
+		};
 
-			const filteredGames = await gcdb.getGames(query);
+		const filteredGames = await gcdb.getGames(query);
 
-			if (filteredGames.length > 0) {
-				const choices = filteredGames.map(item => {
-					return {
-						name: `${item.title} | ${item.platform}`,
-						value: item._id
-					};
-				});
+		if (filteredGames.length) {
+			const choices = filteredGames.map(item => {
+				return {
+					name: `${item.title} | ${item.platform}`,
+					value: item._id
+				};
+			});
 
-				const removeGamesDialog = await utils.dialog('checkbox', 'Remove a game:', 'removeGame', choices, 10, 'You must choose at least one game');
-				const removeGamesConfirmDialog = await utils.dialog('confirm', 'Remove selected game(s)?:', 'isRemoving');
+			const removeGamesDialog = await utils.dialog('checkbox', labels.dialog.remove.title, 'removeGame', choices, 10, labels.dialog.remove.validationMessage);
+			const removeGamesConfirmDialog = await utils.dialog('confirm', labels.dialog.remove.comfirmTitle, 'isRemoving');
 
-				if (removeGamesConfirmDialog.isRemoving) {
-					for (const gameID of removeGamesDialog.removeGame) {
-						let gameToBeRemoved = await gcdb.getGame(gameID);
-						await gcdb.deleteGame(gameID);
-						utils.gameRemoved(gameToBeRemoved.title);
-					}
+			if (removeGamesConfirmDialog.isRemoving) {
+				for (const gameID of removeGamesDialog.removeGame) {
+					let gameToBeRemoved = await gcdb.getGame(gameID);
+					await gcdb.deleteGame(gameID);
+					utils.gameRemoved(gameToBeRemoved.title);
 				}
-			}
-			else {
-				utils.noGamesFound();
 			}
 		}
 		else {
-			utils.pleaseEnterName();
+			utils.noGamesFound();
 		}
 	}
 };
