@@ -12,14 +12,33 @@ module.exports = {
 	calculateGames: (games) => {
 		return console.log(chalk.cyan(games.length) + ` ${labels.log.gamesInCollection}`);
 	},
-	noGamesFound: () => {
-		return console.warn(chalk.dim(labels.warning.noGamesFound));
-	},
 	gameAdded: (game) => {
 		return console.log(chalk.yellow(chalk.bold(game) + ` ${labels.log.insertedIntoCollection}`));
 	},
 	gameRemoved: (game) => {
 		return console.log(chalk.yellow(chalk.bold(game) + ` ${labels.log.removedFromCollection}`));
+	},
+	console: (type, message, style) => {
+		if (type === 'log') {
+			console.log(
+				style ? chalk[style](chalk.dim(message)) : chalk.dim(message)
+			);
+		}
+		if (type === 'warning') {
+			console.log(
+				style ? chalk[style](chalk.yellow(message)) : chalk.yellow(message)
+			);
+		}
+		if (type === 'success') {
+			console.log(
+				style ? chalk[style](chalk.green(message)) : chalk.green(message)
+			);
+		}
+		if (type === 'error') {
+			console.log(
+				style ? chalk[style](chalk.red(message)) : chalk.red(message)
+			);
+		}
 	},
 	dialog: async (dialogType, dialogMessage, dialogName, dialogChoices, dialogPageSize, dialogNoSelectionMessage) => {
 		return await inquirer.prompt([{
@@ -35,5 +54,16 @@ module.exports = {
 				return true;
 			}
 		}]);
+	},
+	getMatchedGame: (gameFromDB, gamesFromAPI) => {
+		for (const item of gamesFromAPI) {
+			if (gameFromDB.title === item.title && gameFromDB.platform === item.platform) {
+				module.exports.console('success', `${item.title} | ${item.platform}`);
+				return item;
+			}
+		}
+
+		module.exports.console('error', `${gameFromDB.title} | ${gameFromDB.platform}`);
+		return null;
 	}
 };

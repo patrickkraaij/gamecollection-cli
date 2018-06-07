@@ -21,6 +21,10 @@ Gamecollection-cli is a command line tool to store all your owned games into a M
 <a name="configuration"></a>
 Create a hidden file called `.gamecollection.config.js` in your home directory to make a connection to your MongoDB database.
 
+``` shell
+$ touch ~/.gamecollection.config.js
+```
+
 ``` javascript
 // .gamecollection.config.js
 module.exports = {
@@ -31,8 +35,7 @@ module.exports = {
 ```
 
 ## Installation
-<a name="configuration"></a>
-## Require / Import
+<a name="installation"></a>
 ``` shell
 $ yarn global add gamecollection-cli
 ```
@@ -43,27 +46,22 @@ $ npm install -g gamecollection-cli
 
 ## Commands
 <a name="commands"></a>
-    list|l [options]   Retrieve all the games from the database
-    add|a <game>       Search for a game and add it to the database
-    remove|rm <game>   Remove a game from the database
+```
+    list [options]    Retrieve all the games from the database
+    add <game>        Search for a game and add it to the database
+    remove|rm <game>  Remove a game from the database
+    repair|rp         Repair your game collection
+```
 
 ## Examples
 <a name="examples"></a>
 ``` shell
 $ gamecollection list
 $ gamecollection list -p
-```
-
-``` shell
 $ gamecollection list | grep Mario
-```
-
-``` shell
 $ gamecollection add Super Mario World
-```
-
-``` shell
 $ gamecollection remove Super Mario World
+$ gamecollection repair
 ```
 ## Contributing
 <a name="contributing"></a>
