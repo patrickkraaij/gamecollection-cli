@@ -65,7 +65,7 @@ module.exports = {
 			}
 		}
 		else {
-			utils.noGamesFound();
+			utils.console('log', labels.warning.noGamesFound);
 		}
 	},
 	removeGame: async (game) => {
@@ -95,7 +95,45 @@ module.exports = {
 			}
 		}
 		else {
-			utils.noGamesFound();
+			utils.console('log', labels.warning.noGamesFound);
+		}
+	},
+	repair: async () => {
+		const failedGames = [];
+		const apiField = 'apiId';
+		const gamecollection = await gcdb.getGames();
+		const gameCollectionWithoutID = gamecollection.filter(currentValue => {
+			return !currentValue.hasOwnProperty(apiField);
+		});
+
+		if (gameCollectionWithoutID.length) {
+			utils.console('log', labels.repair.progress);
+
+			for (const game of gameCollectionWithoutID) {
+				const gamelist = await thegamesdb.getGamesList({ name: game.title, platform: game.platform });
+				const matchedGame = utils.getMatchedGame(game, gamelist);
+
+				if (matchedGame !== null) {
+					await gcdb.updateGame(game._id, apiField, { thegamesdb: matchedGame.id });
+				}
+				else {
+					failedGames.push(game);
+				}
+			}
+
+			if (failedGames.length) {
+				for (const failedGame of failedGames) {
+					await gcdb.deleteGame(failedGame._id);
+					utils.gameRemoved(failedGame.title);
+					utils.console('log', labels.repair.addFailedGame(failedGame));
+					await module.exports.addGame(failedGame.title);
+				}
+			}
+
+			utils.console('log', labels.repair.complete);
+		}
+		else {
+			utils.console('log', labels.repair.noGamesToRepair);
 		}
 	}
 };

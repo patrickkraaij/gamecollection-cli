@@ -34,6 +34,14 @@ program
 		app.removeGame(utils.multipleWordsInput(process.argv));
 	});
 
+program
+	.command('repair')
+	.description('Repair your game collection')
+	.alias('rp')
+	.action(() => {
+		app.repair();
+	});
+
 program.parse(process.argv);
 
 if (!program.args.length) {
