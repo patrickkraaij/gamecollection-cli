@@ -8,37 +8,36 @@ const utils = require('./utils');
 
 module.exports = {
 	getCollection: async () => {
-		const result = await gcdb.getGames();
+		const gamecollection = await gcdb.getGames();
 
 		let table = new Table({
 			head: labels.collectionTableHeader,
 			colWidths: [60, 40]
 		});
 
-		result.forEach((currentValue) => {
-			table.push([currentValue.title, currentValue.platform]);
-		});
+		for (const game of gamecollection) {
+			table.push([game.title, game.platform]);
+		}
 
 		console.log(table.toString());
-		utils.calculateGames(result);
+		utils.calculateGames(gamecollection);
 	},
 	getCollectionPerPlatform: async () => {
-		const result = await gcdb.getGamesPerPlatform();
+		const gamecollectionPerPlatform = await gcdb.getGamesPerPlatform();
 		let table;
 
-		result.forEach((currentValue) => {
+		for (const gamesPerPlatform of gamecollectionPerPlatform) {
 			table = new Table({
-				head: [currentValue.platform],
+				head: [gamesPerPlatform.platform],
 				colWidths: [100]
 			});
 
-			currentValue.games.forEach((game) => {
+			for (const game of gamesPerPlatform.games) {
 				table.push([game.title]);
-			});
-
-			table.push([labels.calculateGames(currentValue.games.length)]);
+			}
+			table.push([labels.calculateGames(gamesPerPlatform.games.length)]);
 			console.log(table.toString());
-		});
+		}
 	},
 	addGame: async (game) => {
 		const thegamesdbResult = await thegamesdb.getGamesList({
