@@ -1,5 +1,7 @@
 'use strict';
 
+const fs = require('fs');
+const os = require('os');
 const Table = require('cli-table');
 const thegamesdb = require('thegamesdb');
 const gcdb = require('gamecollection-mongodb');
@@ -8,37 +10,36 @@ const utils = require('./utils');
 
 module.exports = {
 	getCollection: async () => {
-		const result = await gcdb.getGames();
+		const gamecollection = await gcdb.getGames();
 
 		let table = new Table({
 			head: labels.collectionTableHeader,
 			colWidths: [60, 40]
 		});
 
-		result.forEach((currentValue) => {
-			table.push([currentValue.title, currentValue.platform]);
-		});
+		for (const game of gamecollection) {
+			table.push([game.title, game.platform]);
+		}
 
 		console.log(table.toString());
-		utils.calculateGames(result);
+		utils.calculateGames(gamecollection);
 	},
 	getCollectionPerPlatform: async () => {
-		const result = await gcdb.getGamesPerPlatform();
+		const gamecollectionPerPlatform = await gcdb.getGamesPerPlatform();
 		let table;
 
-		result.forEach((currentValue) => {
+		for (const gamesPerPlatform of gamecollectionPerPlatform) {
 			table = new Table({
-				head: [currentValue.platform],
+				head: [gamesPerPlatform.platform],
 				colWidths: [100]
 			});
 
-			currentValue.games.forEach((game) => {
+			for (const game of gamesPerPlatform.games) {
 				table.push([game.title]);
-			});
-
-			table.push([labels.calculateGames(currentValue.games.length)]);
+			}
+			table.push([labels.calculateGames(gamesPerPlatform.games.length)]);
 			console.log(table.toString());
-		});
+		}
 	},
 	addGame: async (game) => {
 		const thegamesdbResult = await thegamesdb.getGamesList({
@@ -134,6 +135,38 @@ module.exports = {
 		}
 		else {
 			utils.console('log', labels.repair.noGamesToRepair);
+		}
+	},
+	export: async () => {
+		const path = os.homedir() + '/gamecollection.json';
+
+		try {
+			const gamecollection = await gcdb.getGames();
+			fs.writeFileSync(path, JSON.stringify(gamecollection));
+			utils.console('success', labels.export.successfullyExported());
+		}
+		catch (err) {
+			utils.console('error', labels.export.failed);
+			throw err;
+		}
+	},
+	import: async () => {
+		const path = os.homedir() + '/gamecollection.json';
+
+		try {
+			const gamecollectionFromFile = fs.readFileSync(path, 'utf-8');
+			const importConfirmDialog = await utils.dialog('confirm', labels.dialog.import.confirmTitle, 'isImporting');
+
+			if (importConfirmDialog.isImporting) {
+				await gcdb.dropGamecollection();
+				for (const game of JSON.parse(gamecollectionFromFile)) {
+					await gcdb.addGame(game);
+					utils.gameAdded(game.title);
+				}
+			}
+		}
+		catch (err) {
+			throw err;
 		}
 	}
 };

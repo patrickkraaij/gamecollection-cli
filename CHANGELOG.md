@@ -1,12 +1,22 @@
 # Change Log
 
+## v2.2.0 (2018-06-15)
+**Implemented enhancements**
+- Added import and export command. `gamecollection export` will export your game collection to a JSON file and saves it on disk in the home folder. `gamecollection import` will import games from the JSON file which is created by the export command. When importing, it will overwrite the current game collection.
+
+**Technical enhancements**
+- Changed foreach into for of because of performance benefits
+- Updated dependencies to the latest stable version
+
+**General**
+- Updated README
+
 ## v2.1.0 (2018-06-07)
 **Implemented enhancements**
 - Added a repair command, `gamecollection repair` to add an apiId key to all games in your collection in order to retrieve updates for games. In the near future there will be the ability to update each game in your collection.
 
 **Technical enhancements**
 - Simplified log function
-- Changed foreach into for of because of performance benefits
 - Updated dependencies to the latest stable version
 
 **General**

@@ -1,6 +1,6 @@
 {
   "name": "gamecollection-cli",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "CLI tool to do create, read and delete operations at your game collection",
   "main": "gamecli",
   "bin": {
@@ -22,7 +22,7 @@
     "chalk": "^2.0.1",
     "cli-table": "^0.3.1",
     "commander": "^2.11.0",
-    "gamecollection-mongodb": "^0.2.0",
+    "gamecollection-mongodb": "^0.3.0",
     "inquirer": "^3.1.1",
     "thegamesdb": "^0.1.2"
   },

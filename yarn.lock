@@ -383,9 +383,9 @@ functional-red-black-tree@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
 
-gamecollection-mongodb@^0.2.0:
-  version "0.2.0"
-  resolved "https://repo.servicehouse.nl/repository/npm-proxy/gamecollection-mongodb/-/gamecollection-mongodb-0.2.0.tgz#e1d0ecda1f20b70ff1d77140aa30d194d3cdf0d4"
+gamecollection-mongodb@^0.3.0:
+  version "0.3.0"
+  resolved "https://repo.servicehouse.nl/repository/npm-proxy/gamecollection-mongodb/-/gamecollection-mongodb-0.3.0.tgz#26deaa4481f4e8829d669a422b718192beff9712"
   dependencies:
     mongodb "^3.0.8"
 

@@ -47,10 +47,12 @@ $ npm install -g gamecollection-cli
 ## Commands
 <a name="commands"></a>
 ```
-    list [options]    Retrieve all the games from the database
-    add <game>        Search for a game and add it to the database
-    remove|rm <game>  Remove a game from the database
-    repair|rp         Repair your game collection
+list [options]    Retrieve all the games from the database
+add <game>        Search for a game and add it to the database
+remove|rm <game>  Remove a game from the database
+repair|rp         Repair your game collection
+export|ex         Export your game collection to a JSON file and save it on disk
+import|im         Import your game collection from a JSON file located on disk
 ```
 
 ## Examples
@@ -62,6 +64,8 @@ $ gamecollection list | grep Mario
 $ gamecollection add Super Mario World
 $ gamecollection remove Super Mario World
 $ gamecollection repair
+$ gamecollection export
+$ gamecollection import
 ```
 ## Contributing
 <a name="contributing"></a>
