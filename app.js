@@ -1,5 +1,7 @@
 'use strict';
 
+const fs = require('fs');
+const os = require('os');
 const Table = require('cli-table');
 const thegamesdb = require('thegamesdb');
 const gcdb = require('gamecollection-mongodb');
@@ -133,6 +135,38 @@ module.exports = {
 		}
 		else {
 			utils.console('log', labels.repair.noGamesToRepair);
+		}
+	},
+	export: async () => {
+		const path = os.homedir() + '/gamecollection.json';
+
+		try {
+			const gamecollection = await gcdb.getGames();
+			fs.writeFileSync(path, JSON.stringify(gamecollection));
+			utils.console('success', labels.export.successfullyExported());
+		}
+		catch (err) {
+			utils.console('error', labels.export.failed);
+			throw err;
+		}
+	},
+	import: async () => {
+		const path = os.homedir() + '/gamecollection.json';
+
+		try {
+			const gamecollectionFromFile = fs.readFileSync(path, 'utf-8');
+			const importConfirmDialog = await utils.dialog('confirm', labels.dialog.import.confirmTitle, 'isImporting');
+
+			if (importConfirmDialog.isImporting) {
+				await gcdb.dropGamecollection();
+				for (const game of JSON.parse(gamecollectionFromFile)) {
+					await gcdb.addGame(game);
+					utils.gameAdded(game.title);
+				}
+			}
+		}
+		catch (err) {
+			throw err;
 		}
 	}
 };
