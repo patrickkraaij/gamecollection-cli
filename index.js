@@ -36,10 +36,26 @@ program
 
 program
 	.command('repair')
-	.description('Repair your game collection')
+	.description(labels.program.repair)
 	.alias('rp')
 	.action(() => {
 		app.repair();
+	});
+
+program
+	.command('export')
+	.description(labels.program.export)
+	.alias('ex')
+	.action(() => {
+		app.export();
+	});
+
+program
+	.command('import')
+	.description(labels.program.import)
+	.alias('im')
+	.action(() => {
+		app.import();
 	});
 
 program.parse(process.argv);
