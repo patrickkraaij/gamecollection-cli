@@ -70,14 +70,15 @@ module.exports = {
 		}
 	},
 	removeGame: async (game) => {
-		const query = {
-			title: game
-		};
+		const regexp = RegExp(game);
+		const gamecollection = await gcdb.getGames();
 
-		const filteredGames = await gcdb.getGames(query);
+		const potentialGamesToRemove = gamecollection.filter(currentValue => {
+			return regexp.test(currentValue.title);
+		});
 
-		if (filteredGames.length) {
-			const choices = filteredGames.map(item => {
+		if (potentialGamesToRemove.length) {
+			const choices = potentialGamesToRemove.map(item => {
 				return {
 					name: `${item.title} | ${item.platform}`,
 					value: item._id
