@@ -1,11 +1,15 @@
 # Change Log
 
+## v2.3.0 (2018-06-28)
+**Implemented enhancements**
+- To remove a game, the exact title isn\'t required anymore. When you do `gamecollection remove Mario` it will list all the games with the word Mario.
+
 ## v2.2.0 (2018-06-15)
 **Implemented enhancements**
 - Added import and export command. `gamecollection export` will export your game collection to a JSON file and saves it on disk in the home folder. `gamecollection import` will import games from the JSON file which is created by the export command. When importing, it will overwrite the current game collection.
 
 **Technical enhancements**
-- Changed foreach into for of because of performance benefits
+- Changed `foreach` into `for of` because of performance benefits
 - Updated dependencies to the latest stable version
 
 **General**
