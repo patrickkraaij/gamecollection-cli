@@ -128,3 +128,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+__coverage__
+build

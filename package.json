@@ -4,7 +4,7 @@
   "description": "CLI tool to maintain your game collection",
   "main": "gamecli",
   "bin": {
-    "gamecollection": "./index.js"
+    "gamecollection": "index.js"
   },
   "author": "Patrick Kraaij",
   "license": "MIT",
@@ -13,20 +13,34 @@
     "url": "https://github.com/patrickkraaij/gamecollection-cli.git"
   },
   "scripts": {
-    "lint": "./node_modules/.bin/eslint *.js"
+		"dev": "./node_modules/.bin/ts-node src/index.ts",
+    "build": "rm -rf build && ./node_modules/.bin/tsc && cp package.json build/",
+    "prepublish": "npm run build",
+    "publish": "npm publish build",
+    "test": "./node_modules/.bin/jest --verbose",
+    "test:cov": "./node_modules/.bin/jest --verbose --coverage",
+    "lint": "./node_modules/.bin/tslint --fix 'src/**/*.ts'"
   },
   "engines": {
     "node": ">=8.0.0"
   },
   "dependencies": {
-    "chalk": "^2.0.1",
+    "chalk": "^4.1.0",
     "cli-table": "^0.3.1",
-    "commander": "^2.11.0",
+    "commander": "^5.1.0",
     "gamecollection-mongodb": "^0.3.0",
-    "inquirer": "^3.1.1",
-    "thegamesdb": "^0.1.2"
+    "inquirer": "^7.3.0",
+    "node-fetch": "^2.6.0"
   },
   "devDependencies": {
-    "eslint": "^4.1.1"
+    "@types/cli-table": "^0.3.0",
+    "@types/inquirer": "^6.5.0",
+    "@types/jest": "^26.0.4",
+    "@types/node": "^14.0.19",
+    "jest": "^26.1.0",
+    "ts-jest": "^26.1.1",
+    "ts-node": "^8.10.2",
+    "tslint": "^6.1.2",
+    "typescript": "^3.9.6"
   }
 }
